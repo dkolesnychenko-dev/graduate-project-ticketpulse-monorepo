@@ -30,9 +30,6 @@ export interface EventMetadata {
   /** Schema version for forward compatibility */
   schemaVersion: '1.0.0'
 
-  /** CID of the cover image (also stored on-chain as ipfsCoverImageCid) */
-  ipfsCoverImageCid: string
-
   /** Detailed event description (Markdown allowed) */
   description: string
 

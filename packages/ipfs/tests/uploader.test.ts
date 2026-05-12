@@ -23,11 +23,9 @@ vi.mock('kubo-rpc-client', () => ({
 vi.mock('pinata', () => ({
   PinataSDK: vi.fn(() => ({
     upload: {
-      public: {
-        file: vi.fn(async () => ({
-          cid: 'QmMockedPinataCID',
-        })),
-      },
+      file: vi.fn(async () => ({
+        cid: 'QmMockedPinataCID',
+      })),
     },
     testAuthentication: vi.fn(async () => true),
   })),
@@ -42,7 +40,6 @@ const { cidToGatewayUrl } = await import('../src/gateway.js')
 function validMetadata(): EventMetadata {
   return {
     schemaVersion: '1.0.0',
-    ipfsCoverImageCid: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG',
     description: 'Annual tech meetup featuring top speakers',
     location: 'Fabrika.space, Харків',
   }
@@ -79,21 +76,7 @@ describe('uploadEventMetadata — validation', () => {
     await expect(uploadEventMetadata(metadata)).rejects.toThrow('location')
   })
 
-  it('rejects invalid CID format for ipfsCoverImageCid', async () => {
-    const metadata = validMetadata()
-    metadata.ipfsCoverImageCid = 'not-a-cid'
-    await expect(uploadEventMetadata(metadata)).rejects.toThrow(
-      'ipfsCoverImageCid',
-    )
-  })
 
-  it("accepts CIDv1 format (starts with 'b')", async () => {
-    const metadata = validMetadata()
-    metadata.ipfsCoverImageCid =
-      'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi'
-    const result = await uploadEventMetadata(metadata)
-    expect(result.cid).toBeTruthy()
-  })
 
   it('succeeds with valid metadata using Pinata provider', async () => {
     const config = {

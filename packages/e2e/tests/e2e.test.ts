@@ -108,7 +108,6 @@ describe('TicketPulse Subgraph E2E Integration', () => {
 
     const metadataToUpload = {
       schemaVersion: '1.0.0' as const,
-      ipfsCoverImageCid: coverResult.cid,
       description: 'E2E Test Description for Concert',
       location: 'Test Arena',
     }
@@ -205,6 +204,5 @@ describe('TicketPulse Subgraph E2E Integration', () => {
     expect(fetchedMetadata.schemaVersion).toBe('1.0.0')
     expect(fetchedMetadata.description).toBe(metadataToUpload.description)
     expect(fetchedMetadata.location).toBe(metadataToUpload.location)
-    expect(fetchedMetadata.ipfsCoverImageCid).toBe(coverResult.cid)
   })
 })

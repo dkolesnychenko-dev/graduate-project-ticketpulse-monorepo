@@ -138,6 +138,12 @@ pnpm --filter @ticketpulse/e2e run test
 
 If the tests pass, your entire local ecosystem is **99.99% operational**! 🎉
 
+> [!TIP]
+> **Troubleshooting IPFS Timeouts:** If the E2E tests hang or time out during the `Uploading to IPFS...` stage, it is likely due to the local IPFS container (Kubo) getting into a stuck state on Windows. To fix this, simply restart the container:
+> ```bash
+> docker restart ticketpulse-ipfs
+> ```
+
 ---
 
 ## ✨ Code Quality & Development

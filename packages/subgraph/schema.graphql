@@ -75,12 +75,11 @@ type Event @entity {
   """
   ipfsMetadataCid: String
 
-  # --- Metadata (IPFS) ---
+  # --- Metadata ---
   # Fields below are indexed from on-chain constructor args so the subgraph
   # can serve basic event cards without an IPFS round-trip.
   # Nullable until the indexer processes the creation transaction.
   title: String
-  description: String
   ticketType: String # e.g. "VIP", "General Admission", "Early Bird" — single type per event in v1
   ipfsCoverImageCid: String # IPFS CID of the cover image (min 1200×630 px, max 5 MB)
   ticketSymbol: String # Short NFT collection ticker, 2–10 uppercase chars (e.g. "TNWT26"). Displayed in wallets and block explorers

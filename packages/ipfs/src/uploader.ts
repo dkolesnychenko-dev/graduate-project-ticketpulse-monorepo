@@ -9,7 +9,6 @@
 //   2. Frontend calls `uploadFile(imageBuffer)` → returns { cid, gatewayUrl }
 //   3. Frontend calls `uploadEventMetadata({...})` → returns { cid, gatewayUrl }
 //   4. Frontend calls `TicketPulseFactory.createEvent()` with:
-//        - InitParams.ipfsCoverImageCid = step 2 cid
 //        - InitParams.ipfsMetadataCid   = step 3 cid
 //   5. The smart contract stores ipfsCoverImageCid in state
 //   6. The smart contract emits ipfsMetadataCid in EventInitialized log
@@ -107,7 +106,6 @@ export async function uploadFile(
  *   title: "Tech Night Kharkiv 2026",
  *   ticketType: "General Admission",
  *   ticketSymbol: "TNKH26",
- *   coverImageCid: coverResult.cid,
  *   description: "Annual tech meetup...",
  *   location: "Fabrika.space, Харків",
  *   startDate: "2026-06-15T18:00:00+03:00",
@@ -145,7 +143,6 @@ function validateEventMetadata(metadata: EventMetadata): void {
   }
 
   const requiredStrings: (keyof EventMetadata)[] = [
-    'ipfsCoverImageCid',
     'description',
     'location',
   ]
@@ -159,14 +156,4 @@ function validateEventMetadata(metadata: EventMetadata): void {
     }
   }
 
-  // Validate CID format (basic check — CIDv0 starts with "Qm", CIDv1 starts with "b")
-  if (
-    !metadata.ipfsCoverImageCid.startsWith('Qm') &&
-    !metadata.ipfsCoverImageCid.startsWith('b')
-  ) {
-    throw new Error(
-      `[IPFS] EventMetadata.ipfsCoverImageCid doesn't look like a valid CID: "${metadata.ipfsCoverImageCid}". ` +
-        `Expected CIDv0 (Qm...) or CIDv1 (bafy...).`,
-    )
-  }
 }
