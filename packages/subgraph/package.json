@@ -1,0 +1,41 @@
+{
+  "name": "@ticketpulse/subgraph",
+  "version": "1.0.0",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "build:sepolia": "node scripts/sync-networks.js base-sepolia && graph build --network base-sepolia",
+    "build:mainnet": "node scripts/sync-networks.js base && graph build --network base",
+    "test": "graph test",
+    "test:docker": "docker build -t matchstick . && docker run -it --rm -v \"%cd%\\..\\..\":/workspace matchstick",
+    "auth:studio": "graph auth --studio",
+    "create:local": "graph create --node http://localhost:8020/ ticketpulse/subgraph",
+    "remove:local": "graph remove --node http://localhost:8020/ ticketpulse/subgraph",
+    "deploy:local": "node scripts/sync-networks.js localhost && pnpm codegen && graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ticketpulse/subgraph --network localhost --network-file networks.local.json --version-label v0.0.1",
+    "deploy:studio:sepolia": "node scripts/sync-networks.js base-sepolia && pnpm codegen && graph deploy --studio ticketpulse-sepolia --network base-sepolia",
+    "deploy:studio:mainnet": "node scripts/sync-networks.js base && pnpm codegen && graph deploy --studio ticketpulse --network base",
+    "clean": "rimraf build generated networks.local.json",
+    "lint": "eslint src/ --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "graph build",
+    "docs:generate": "magidoc generate",
+    "docs:preview": "magidoc preview"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "^0.32.0"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.68.5",
+    "@magidoc/cli": "latest",
+    "@ticketpulse/contracts": "workspace:*",
+    "assemblyscript": "^0.27.23",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "matchstick-as": "^0.6.0",
+    "mustache": "^4.2.0",
+    "prettier": "^3.2.5",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}

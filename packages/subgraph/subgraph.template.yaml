@@ -1,0 +1,72 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: TicketPulseFactory
+    network: {{network}}
+    source:
+      abi: TicketPulseFactory
+      address: "{{TicketPulseFactory.address}}"
+      startBlock: {{TicketPulseFactory.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Event
+      abis:
+        - name: TicketPulseFactory
+          file: ../contracts/out/TicketPulseFactory.sol/TicketPulseFactory.json
+      eventHandlers:
+        - event: EventCreated(indexed address,indexed address,indexed uint256)
+          handler: handleEventCreated
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum
+    name: TicketPulseEvent
+    network: {{network}}
+    source:
+      abi: TicketPulseEvent
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Ticket
+        - SellOrder
+        - BuyOrder
+        - ActivityLog
+        - Balance
+      abis:
+        - name: TicketPulseEvent
+          file: ../contracts/out/TicketPulseEvent.sol/TicketPulseEvent.json
+      eventHandlers:
+        - event: EventInitialized(indexed
+            address,uint64,uint64,uint256,uint32,uint8,uint8,uint8,uint256,string,string,string,string,string,string)
+          handler: handleEventInitialized
+        - event: TicketMinted(indexed address,indexed uint256,uint256,bytes32)
+          handler: handleTicketMinted
+        - event: SellOrderCreated(indexed uint256,indexed uint256,indexed address,uint256)
+          handler: handleSellOrderCreated
+        - event: SellOrderCancelled(indexed uint256,indexed uint256,indexed address)
+          handler: handleSellOrderCancelled
+        - event: BuyOrderCreated(indexed uint256,indexed address,uint256,bytes32)
+          handler: handleBuyOrderCreated
+        - event: BuyOrderCancelled(indexed uint256,indexed address,uint256)
+          handler: handleBuyOrderCancelled
+        - event: OrderMatched(indexed uint256,indexed address,indexed
+            address,uint256,uint256,uint256,uint256,uint256,bytes32)
+          handler: handleOrderMatched
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: OrganizerPrimaryWithdrawal(indexed address,uint256)
+          handler: handleOrganizerPrimaryWithdrawal
+        - event: OrganizerRoyaltyWithdrawal(indexed address,uint256)
+          handler: handleOrganizerRoyaltyWithdrawal
+        - event: SellerWithdrawal(indexed address,uint256)
+          handler: handleSellerWithdrawal
+        - event: QueueGasLimitReached(bool)
+          handler: handleQueueGasLimitReached
+      file: ./src/mapping.ts

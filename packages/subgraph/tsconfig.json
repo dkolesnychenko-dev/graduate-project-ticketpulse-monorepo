@@ -1,0 +1,22 @@
+{
+  "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "ignoreDeprecations": "5.0",
+    "noLib": true,
+    "noResolve": true,
+    "skipLibCheck": true,
+    "paths": {
+      "matchstick-as": ["node_modules/matchstick-as"]
+    }
+  },
+  "include": [
+    "src",
+    "tests",
+    "generated"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}

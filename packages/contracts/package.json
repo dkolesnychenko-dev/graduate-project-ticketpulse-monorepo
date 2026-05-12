@@ -1,0 +1,20 @@
+{
+    "name": "@ticketpulse/contracts",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "forge build",
+        "test": "forge test",
+        "clean": "forge clean",
+        "format": "forge fmt",
+        "format:check": "forge fmt --check",
+        "lint": "solhint \"src/**/*.sol\" \"test/**/*.sol\"",
+        "typecheck": "forge build",
+        "deploy:local": "forge script script/Deploy.s.sol:DeployScript --rpc-url local --broadcast",
+        "deploy:base-sepolia": "forge script script/Deploy.s.sol:DeployScript --rpc-url base_sepolia --broadcast --verify -vvvv",
+        "deploy:base": "forge script script/Deploy.s.sol:DeployScript --rpc-url base --broadcast --verify -vvvv"
+    },
+    "devDependencies": {
+        "solhint": "^6.2.1"
+    }
+}

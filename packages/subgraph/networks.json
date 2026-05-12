@@ -1,0 +1,20 @@
+{
+  "localhost": {
+    "TicketPulseFactory": {
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "startBlock": 0
+    }
+  },
+  "base-sepolia": {
+    "TicketPulseFactory": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 0
+    }
+  },
+  "base": {
+    "TicketPulseFactory": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 0
+    }
+  }
+}

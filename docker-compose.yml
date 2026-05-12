@@ -1,0 +1,151 @@
+# ═══════════════════════════════════════════════════════════════════════
+# TicketPulse — Local Development Infrastructure
+# ═══════════════════════════════════════════════════════════════════════
+#
+# This file defines ALL Docker services needed for local development:
+#
+#   1. ipfs       — Kubo IPFS node (stores images + metadata)
+#   2. postgres   — Database for graph-node
+#   3. graph-node — The Graph indexer (indexes smart contract events)
+#
+# Usage:
+#   docker compose up -d          # Start all services
+#   docker compose up ipfs -d     # Start only IPFS
+#   docker compose down           # Stop all services
+#   docker compose down -v        # Stop and delete all data volumes
+#
+# ─── How services connect ────────────────────────────────────────────
+#
+#   [Your Frontend]                  [Deploy Scripts]
+#        │                                │
+#        │ fetch images                   │ upload images/metadata
+#        ▼                                ▼
+#   ┌──────────────────────────────────────────┐
+#   │  IPFS (Kubo)                             │
+#   │  - Port 5001: API (write/upload)         │
+#   │  - Port 8080: Gateway (read/display)     │
+#   └──────────────────────────────────────────┘
+#        ▲
+#        │ stores subgraph WASM/ABI/manifest
+#        │ during `graph deploy`
+#   ┌──────────────────────────────────────────┐
+#   │  graph-node                              │
+#   │  - Port 8000: GraphQL queries (HTTP)     │
+#   │  - Port 8020: Admin (deploy subgraphs)   │
+#   │  - Connects to ipfs:5001 internally      │
+#   │  - Connects to Ethereum RPC (Foundry)    │
+#   └──────────────────────────────────────────┘
+#        │
+#        ▼
+#   ┌──────────────────────────────────────────┐
+#   │  PostgreSQL                              │
+#   │  - Port 5432: graph-node data storage    │
+#   └──────────────────────────────────────────┘
+#
+# ═══════════════════════════════════════════════════════════════════════
+
+services:
+  # ─── IPFS (Kubo) ──────────────────────────────────────────────────
+  #
+  # Official IPFS implementation in Go.
+  #
+  # Two roles in TicketPulse:
+  #   1. @ticketpulse/ipfs package uses port 5001 to UPLOAD
+  #      cover images and EventMetadata JSON
+  #   2. graph-node uses port 5001 to STORE compiled subgraph
+  #      artifacts (WASM, ABI, manifest) during `graph deploy`
+  #
+  # The gateway on port 8080 is used by the frontend to READ/display
+  # images and metadata in the browser (via <img src="...">) or
+  # via fetch() calls.
+  #
+  ipfs:
+    image: ipfs/kubo:v0.32.1
+    container_name: ticketpulse-ipfs
+    restart: unless-stopped
+    ports:
+      - '5001:5001' # API — used by @ticketpulse/ipfs + graph deploy
+      - '8080:8080' # Gateway — used by frontend to display images
+    volumes:
+      - ipfs_data:/data/ipfs
+    environment:
+      # Allow API access from any origin (needed for browser uploads)
+      - IPFS_PROFILE=server
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'ipfs dag stat /ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── PostgreSQL ───────────────────────────────────────────────────
+  #
+  # Required by graph-node to store indexed data.
+  #
+  postgres:
+    image: postgres:16-alpine
+    container_name: ticketpulse-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: graph-node
+      POSTGRES_PASSWORD: let-me-in
+      POSTGRES_DB: graph-node
+      POSTGRES_INITDB_ARGS: '-E UTF8 --locale=C'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U graph-node']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Graph Node ───────────────────────────────────────────────────
+  #
+  # The Graph protocol indexer.
+  #
+  # Indexes smart contract events from the local Anvil node
+  # and serves GraphQL queries to the frontend.
+  #
+  # Subgraph deployment flow:
+  #   1. graph-node receives the subgraph manifest via port 8020
+  #   2. graph-node uploads compiled WASM+ABI to IPFS (port 5001)
+  #   3. graph-node starts indexing from the specified startBlock
+  #
+  graph-node:
+    image: graphprotocol/graph-node:v0.36.1
+    container_name: ticketpulse-graph-node
+    restart: unless-stopped
+    ports:
+      - '8000:8000' # GraphQL HTTP — frontend queries this
+      - '8001:8001' # GraphQL WebSocket — subscriptions
+      - '8020:8020' # Admin — `graph deploy` targets this
+      - '8030:8030' # Index status
+    depends_on:
+      ipfs:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      postgres_host: postgres
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      # Points to the Anvil running on your Windows host.
+      ethereum: 'localhost:http://host.docker.internal:8545'
+      GRAPH_LOG: info
+      ETHEREUM_REORG_THRESHOLD: 1
+      ETHEREUM_ANCESTOR_COUNT: 1
+
+volumes:
+  ipfs_data:
+    driver: local
+  postgres_data:
+    driver: local

@@ -1,0 +1,40 @@
+{
+  "name": "@ticketpulse/ipfs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IPFS integration layer for TicketPulse — upload images and event metadata, resolve CIDs to gateway URLs",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ --ext .ts,.js",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\""
+  },
+  "dependencies": {
+    "kubo-rpc-client": "^4.1.1",
+    "pinata": "^1.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "prettier": "^3.2.5",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.1.4",
+    "rimraf": "^6.0.1"
+  }
+}

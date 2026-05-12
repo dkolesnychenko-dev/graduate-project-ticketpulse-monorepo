@@ -1,0 +1,26 @@
+{
+  "name": "@ticketpulse/e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint tests/ --ext .ts",
+    "format": "prettier --write \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .vitest-results"
+  },
+  "devDependencies": {
+    "@ticketpulse/ipfs": "workspace:*",
+    "@types/node": "^20.11.24",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "graphql-request": "^6.1.0",
+    "prettier": "^3.2.5",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.0.0",
+    "viem": "^2.48.11",
+    "vitest": "^1.6.1"
+  }
+}

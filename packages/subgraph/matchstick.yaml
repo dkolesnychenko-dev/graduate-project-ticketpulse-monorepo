@@ -1,0 +1,5 @@
+testsFolder: tests
+manifestPath: subgraph.yaml
+schemaPath: schema.graphql
+libs:
+  - node_modules
