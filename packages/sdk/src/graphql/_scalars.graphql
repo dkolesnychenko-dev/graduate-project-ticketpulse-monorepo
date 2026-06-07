@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────
+# Subgraph-specific scalar + directive declarations.
+#
+# The Graph extends GraphQL with custom scalars (`BigInt`, `Bytes`,
+# `BigDecimal`, `Int8`) and directives (`@entity`, `@derivedFrom`,
+# `@subgraphId`, `@fulltext`). These are recognised by the Graph Node
+# at indexing time but unknown to vanilla `graphql-codegen`.
+#
+# Declaring them here lets `graphql-codegen` load the subgraph's
+# `schema.graphql` as a local file — no need for the indexer to be
+# running on the developer's machine.
+#
+# The mapping of `BigInt` / `Bytes` to `string` happens in
+# `codegen.ts → config.scalars`.
+# ─────────────────────────────────────────────────────────────────────
+
+scalar BigInt
+scalar Bytes
+scalar BigDecimal
+scalar Int8
+scalar Timestamp
+
+directive @entity(immutable: Boolean, timeseries: Boolean) on OBJECT
+directive @derivedFrom(field: String!) on FIELD_DEFINITION
+directive @subgraphId(id: String!) on OBJECT
+directive @fulltext(
+  name: String!
+  language: String!
+  algorithm: String!
+  include: [FulltextInclude!]!
+) on OBJECT
+
+input FulltextInclude {
+  entity: String!
+  fields: [FulltextIncludeField!]!
+}
+
+input FulltextIncludeField {
+  name: String!
+}

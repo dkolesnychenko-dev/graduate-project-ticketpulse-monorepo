@@ -25,10 +25,9 @@ Detailed documentation, architectural decisions, and **production deployment ins
 | 📜 **[@ticketpulse/contracts](./packages/contracts/README.md)** | Core Foundry smart contracts (Factory, Event, FIFO marketplace, Royalties). |
 | 🔍 **[@ticketpulse/subgraph](./packages/subgraph/README.md)** | The Graph indexing layer, optimized for fast frontend GraphQL queries and data aggregation. |
 | 🌐 **[@ticketpulse/ipfs](./packages/ipfs/README.md)** | IPFS integration SDK (Pinata V3 & local Kubo) for uploading and fetching event metadata and images. |
+| 🧰 **[@ticketpulse/sdk](./packages/sdk/README.md)** | Shared TypeScript SDK: types, Wagmi/Apollo factories, identity (EIP-712 + QR), `RichEvent` builder, Chainlink reader. No React. |
 | 🧪 **[@ticketpulse/e2e](./packages/e2e/README.md)** | Full pipeline integration tests verifying the end-to-end flow: Blockchain ↔ Subgraph ↔ IPFS. |
-
-> [!NOTE]
-> Frontend application will be added to `apps/web` in future updates.
+| 🖥️ **[@ticketpulse/web](./apps/web/README.md)** | Next.js 15 frontend (React 19, FSD, Tailwind, shadcn/ui, Wagmi + RainbowKit, Apollo). |
 
 ---
 
@@ -72,6 +71,7 @@ This command uses **Turborepo** to:
 1. Compile all Solidity smart contracts.
 2. Generate AssemblyScript types for the Subgraph (codegen).
 3. Build the Subgraph WASM modules.
+4. Sync contract ABIs and generate GraphQL types for the SDK.
 
 ### Step 3: Environment Variables
 
@@ -143,6 +143,44 @@ If the tests pass, your entire local ecosystem is **99.99% operational**! 🎉
 > ```bash
 > docker restart ticketpulse-ipfs
 > ```
+
+### Step 8: Run the Web App
+
+The frontend lives in `apps/web` and uses Next.js 15 + Turbopack.
+**Local development needs zero RPC keys** — Anvil + local Graph Node +
+Kubo IPFS are all you've already started.
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+# The default file ("SECTION A") is pre-wired for local dev. The only
+# variable you must change is NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID —
+# grab a free project id at https://cloud.walletconnect.com (~30 s).
+
+pnpm --filter @ticketpulse/web dev              # → http://localhost:3000
+```
+
+The dev script transparently runs SDK codegen (via Turbo's task graph)
+before starting Next.js, so typed ABIs + GraphQL document nodes are
+always fresh. Re-run codegen manually only when you change a contract
+or the subgraph `schema.graphql`:
+
+```bash
+pnpm --filter @ticketpulse/sdk codegen
+```
+
+For **production / Base Sepolia / Base Mainnet** deployment (Pinata +
+The Graph Studio + an RPC provider), follow the dedicated guide in
+[`apps/web/README.md`](./apps/web/README.md#-production--staging-deployment).
+It walks through every external account (WalletConnect Cloud, Pinata,
+Alchemy / Infura / QuickNode) plus the Vercel environment-variable mapping.
+
+> [!NOTE]
+> **URL-based i18n is already wired.** All routes live under an
+> `app/[locale]/` segment with `localePrefix: 'as-needed'` — the default
+> locale (English) ships without a URL prefix, future languages will
+> auto-prefix (`/uk/events`). See
+> [`apps/web/README.md#localisation`](./apps/web/README.md#-localisation)
+> for the step-by-step recipe to add a new language.
 
 ---
 

@@ -50,13 +50,28 @@ During local development, we run a local IPFS node called **Kubo** via Docker.
 
 ### 2. Production (`provider: 'pinata'`)
 
-In production, we use **Pinata** strictly for **uploading and pinning**, but we use a robust **fallback gateway mechanism** for reading data, completely bypassing Pinata's reading limits.
+In production we use **Pinata** strictly for **uploading and pinning**, but for **reading** we rely on a robust **fallback gateway chain** so no single provider can take the marketplace down.
 
-- **Uploads (Writes)**: Made using the official Pinata V3 SDK (`pinata`), authenticated via a JWT token and your dedicated Pinata Gateway domain. You must create an account at [Pinata](https://pinata.cloud/) and generate an API Key (JWT) along with a Gateway.
-- **Downloads (Reads)**: The `fetchEventMetadata` function automatically tries to fetch data through multiple gateways in the following order:
-  1. **IPFS.io** (`https://ipfs.io`) - The official public gateway. Primary reliable source.
-  2. **Pinata Dedicated Gateway** (via SDK) - Fast and reliable access through your Pinata account (if `provider: 'pinata'` is set).
-  3. **Infura** (Optional) - Serves as a great fallback if configured via `infuraGatewayUrl`.
+- **Uploads (Writes)**: Made using the official Pinata V3 SDK (`pinata`),
+  authenticated via a JWT token and your dedicated Pinata Gateway domain.
+  Create an account at [Pinata](https://pinata.cloud/), generate an API Key
+  (JWT) with the **`pinFileToIPFS` + `pinJSONToIPFS`** scopes, and
+  provision a Gateway from the dashboard. Copy the gateway hostname
+  without the `https://` prefix.
+- **Downloads (Reads)**: `fetchEventMetadata` and the SDK's
+  view-aggregator iterate `getGatewayUrls(cid, config)` in priority order
+  and stop at the first gateway that responds:
+
+  | Order | Gateway | When it's used |
+  | :--- | :--- | :--- |
+  | 1 | `https://ipfs.io` | Always — free public Foundation gateway. |
+  | 2 | `https://<your-id>.mypinata.cloud` | When `IpfsConfig.pinataGateway` is set. Your own paid gateway hosts the freshest copy of content you uploaded. |
+  | 3 | `IpfsConfig.infuraGatewayUrl` | When `INFURA_GATEWAY_URL` is set. Optional paid fallback for when Pinata is rate-limited. |
+
+  The frontend exposes this through the server-side `/api/ipfs/[cid]`
+  Edge route — see [`apps/web/README.md`](../../apps/web/README.md) for
+  the env-variable wiring (`PINATA_JWT`, `PINATA_GATEWAY`,
+  `INFURA_GATEWAY_URL`).
 
 ---
 

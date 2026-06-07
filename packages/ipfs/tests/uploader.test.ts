@@ -41,7 +41,7 @@ function validMetadata(): EventMetadata {
   return {
     schemaVersion: '1.0.0',
     description: 'Annual tech meetup featuring top speakers',
-    location: 'Fabrika.space, Харків',
+    location: 'Fabrika.space, Kharkiv',
   }
 }
 

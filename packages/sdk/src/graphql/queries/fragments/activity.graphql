@@ -1,0 +1,29 @@
+fragment ActivityLogFields on ActivityLog {
+  id
+  type
+  createdAt
+  blockNumber
+  txHash
+  logIndex
+  price
+  royaltyAmount
+  initiator {
+    id
+  }
+  from {
+    id
+  }
+  to {
+    id
+  }
+  ticket {
+    id
+    tokenId
+  }
+  sellOrder {
+    id
+  }
+  buyOrder {
+    id
+  }
+}

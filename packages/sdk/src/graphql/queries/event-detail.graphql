@@ -1,0 +1,46 @@
+# Full event page (F-23): event + first page of secondary-market queues +
+# activity timeline. Single round-trip keeps the page interactive faster.
+query EventDetail($id: ID!, $activityFirst: Int = 20) {
+  event(id: $id) {
+    ...EventStatsFields
+    sellOrders(
+      where: { status: ACTIVE }
+      orderBy: createdAt
+      orderDirection: asc
+      first: 50
+    ) {
+      ...SellOrderFields
+    }
+    buyOrders(
+      where: { status: ACTIVE }
+      orderBy: orderId
+      orderDirection: asc
+      first: 50
+    ) {
+      ...BuyOrderFields
+    }
+    activityLogs(
+      orderBy: createdAt
+      orderDirection: desc
+      first: $activityFirst
+    ) {
+      ...ActivityLogFields
+    }
+  }
+}
+
+# Activity tail for the "Load more" timeline button.
+query EventActivity(
+  $eventId: String!
+  $first: Int!
+  $createdAt_lt: BigInt
+) {
+  activityLogs(
+    first: $first
+    where: { event: $eventId, createdAt_lt: $createdAt_lt }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
+    ...ActivityLogFields
+  }
+}

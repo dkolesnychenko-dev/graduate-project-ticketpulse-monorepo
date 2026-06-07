@@ -13,9 +13,9 @@
 // what browsers can reach directly. The RPC API is for writes (uploads).
 // ═══════════════════════════════════════════════════════════════════════
 
-import { getGatewayUrls } from './gateway.js'
-import { LOCAL_IPFS_CONFIG } from './client.js'
-import type { IpfsConfig, EventMetadata } from './types.js'
+import { getGatewayUrls } from './gateway'
+import { LOCAL_IPFS_CONFIG } from './client'
+import type { IpfsConfig, EventMetadata } from './types'
 
 /**
  * Fetch EventMetadata JSON from IPFS by CID.
@@ -35,7 +35,7 @@ import type { IpfsConfig, EventMetadata } from './types.js'
  * const { data } = useQuery(GET_EVENT, { variables: { id: eventAddress } });
  * const metadata = await fetchEventMetadata(data.event.ipfsMetadataCid);
  * // metadata.description → "Annual tech meetup..."
- * // metadata.location → "Fabrika.space, Харків"
+ * // metadata.location → "Fabrika.space, Kharkiv"
  * ```
  */
 export async function fetchEventMetadata(

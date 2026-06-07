@@ -17,9 +17,9 @@
 //      then fetches the full JSON from the gateway for display
 // ═══════════════════════════════════════════════════════════════════════
 
-import { getClient, LOCAL_IPFS_CONFIG } from './client.js'
-import { cidToGatewayUrl } from './gateway.js'
-import type { IpfsConfig, EventMetadata, UploadResult } from './types.js'
+import { getClient, LOCAL_IPFS_CONFIG } from './client'
+import { cidToGatewayUrl } from './gateway'
+import type { IpfsConfig, EventMetadata, UploadResult } from './types'
 
 /**
  * Upload a raw file (image, PDF, etc.) to IPFS.
@@ -107,7 +107,7 @@ export async function uploadFile(
  *   ticketType: "General Admission",
  *   ticketSymbol: "TNKH26",
  *   description: "Annual tech meetup...",
- *   location: "Fabrika.space, Харків",
+ *   location: "Fabrika.space, Kharkiv",
  *   startDate: "2026-06-15T18:00:00+03:00",
  *   endDate: "2026-06-15T23:00:00+03:00",
  *   organizerName: "TicketPulse Team",
@@ -142,10 +142,7 @@ function validateEventMetadata(metadata: EventMetadata): void {
     )
   }
 
-  const requiredStrings: (keyof EventMetadata)[] = [
-    'description',
-    'location',
-  ]
+  const requiredStrings: (keyof EventMetadata)[] = ['description', 'location']
 
   for (const field of requiredStrings) {
     const value = metadata[field]
@@ -155,5 +152,4 @@ function validateEventMetadata(metadata: EventMetadata): void {
       )
     }
   }
-
 }

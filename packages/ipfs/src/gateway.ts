@@ -17,8 +17,8 @@
 // stored in the subgraph's Event entity.
 // ═══════════════════════════════════════════════════════════════════════
 
-import { LOCAL_IPFS_CONFIG } from './client.js'
-import type { IpfsConfig } from './types.js'
+import { LOCAL_IPFS_CONFIG } from './client'
+import type { IpfsConfig } from './types'
 
 /**
  * Convert a raw CID string into a full HTTP gateway URL.
@@ -87,7 +87,9 @@ export function cidToGatewayUrl(
   cid: string,
   config: IpfsConfig = LOCAL_IPFS_CONFIG,
 ): string {
-  return getGatewayUrls(cid, config)[0]
+  // getGatewayUrls always returns ≥1 URL (ipfs.io is always present as fallback)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return getGatewayUrls(cid, config)[0]!
 }
 
 /**

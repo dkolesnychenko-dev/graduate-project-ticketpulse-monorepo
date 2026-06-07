@@ -1,0 +1,30 @@
+# F-13 — buy requests page. We pull both ACTIVE and COMPLETED in one go and
+# split client-side; cursor pagination via `createdAt_lt`.
+query MyBuyOrders(
+  $buyer: String!
+  $first: Int!
+  $createdAt_lt: BigInt
+) {
+  buyOrders(
+    first: $first
+    where: {
+      buyer: $buyer
+      createdAt_lt: $createdAt_lt
+    }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
+    ...BuyOrderFields
+  }
+}
+
+# Used by the event detail page (F-8 scenario 3) to know whether the
+# current viewer already has an active buy order for the displayed event.
+query MyBuyOrderForEvent($event: String!, $buyer: String!) {
+  buyOrders(
+    first: 1
+    where: { event: $event, buyer: $buyer, status: ACTIVE }
+  ) {
+    ...BuyOrderFields
+  }
+}

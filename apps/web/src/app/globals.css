@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════════════════════
+ * Brand design tokens — HSL values used by `hsl(var(--token))` in
+ * tailwind.config.ts. Theme switching is `[data-theme="…"]` on <html>
+ * so the OS preference can be overridden without re-rendering React.
+ *
+ * Conversion notes (from Style Guide HEX → HSL):
+ *   #121614  →  150 8% 8%      (Deep Forest Night)
+ *   #1E2522  →  156 9% 13%     (Obsidian Slate)
+ *   #F4F5F7  →  220 13% 96%    (Cloud Dancer)
+ *   #FFFFFF  →  0 0% 100%      (Pure White)
+ *   #1A4D2E  →  144 49% 21%    (Forest Green)
+ *   #DFFF00  →  68 100% 50%    (Acid Lime)
+ *   #EF5777  →  348 84% 64%    (Cyber Rose)
+ *   #00FFC2  →  165 100% 50%   (Carbon Mint)
+ *   #F59E0B  →  37 92% 50%     (Solar Amber)
+ *   #EF4444  →  0 84% 60%      (Crimson Alert)
+ *   #71717A  →  240 5% 46%     (Muted Zinc)
+ * ════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  /* ─── Default theme: Light (B2B-friendly chart canvas) ────────────── */
+  :root,
+  [data-theme='light'] {
+    --background: 220 13% 96%;
+    --foreground: 150 8% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 150 8% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 8% 8%;
+
+    --primary: 144 49% 21%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 68 100% 50%;
+    --secondary-foreground: 150 8% 8%;
+
+    --muted: 220 13% 91%;
+    --muted-foreground: 240 5% 35%;
+
+    --accent: 68 100% 50%;
+    --accent-foreground: 150 8% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 165 70% 35%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 37 92% 50%;
+    --warning-foreground: 150 8% 8%;
+
+    --border: 220 13% 85%;
+    --input: 220 13% 88%;
+    --ring: 144 49% 21%;
+
+    --radius: 0.75rem;
+  }
+
+  /* ─── Dark theme: imersive event-night atmosphere ─────────────────── */
+  [data-theme='dark'] {
+    --background: 150 8% 8%;
+    --foreground: 220 13% 96%;
+
+    --card: 156 9% 13%;
+    --card-foreground: 220 13% 96%;
+
+    --popover: 156 9% 13%;
+    --popover-foreground: 220 13% 96%;
+
+    --primary: 68 100% 50%;
+    --primary-foreground: 150 8% 8%;
+
+    --secondary: 348 84% 64%;
+    --secondary-foreground: 150 8% 8%;
+
+    --muted: 156 9% 18%;
+    --muted-foreground: 220 13% 70%;
+
+    --accent: 68 100% 50%;
+    --accent-foreground: 150 8% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 165 100% 50%;
+    --success-foreground: 150 8% 8%;
+
+    --warning: 37 92% 50%;
+    --warning-foreground: 150 8% 8%;
+
+    --border: 156 9% 22%;
+    --input: 156 9% 22%;
+    --ring: 68 100% 50%;
+  }
+
+  /* ─── Base typography & form normalisation ────────────────────────── */
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply antialiased;
+    color-scheme: light dark;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Default to tabular figures for any element marked with `data-numeric`.
+   * Saves on having to remember `font-tabular` on every monetary value. */
+  [data-numeric] {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings:
+      'tnum' on,
+      'lnum' on;
+  }
+
+  /* Focus-visible ring tuned to the Style Guide accent so kbd nav looks
+   * intentional rather than browser-default. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* QR-code containers always render on white per F-9, regardless of theme. */
+  .qr-canvas {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  /* Container query helper — used by event cards to switch layout when
+   * placed inside narrower side panels. Tailwind v3 doesn't yet ship
+   * container queries as a first-class utility set. */
+  .cq-event-card {
+    container-type: inline-size;
+  }
+}

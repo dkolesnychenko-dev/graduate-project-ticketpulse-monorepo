@@ -14,7 +14,7 @@
 // ═══════════════════════════════════════════════════════════════════════
 
 import { create, type KuboRPCClient } from 'kubo-rpc-client'
-import type { IpfsConfig } from './types.js'
+import type { IpfsConfig } from './types'
 
 /** Default configuration for local development with Docker Kubo */
 export const LOCAL_IPFS_CONFIG: IpfsConfig = {

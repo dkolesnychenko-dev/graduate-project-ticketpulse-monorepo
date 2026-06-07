@@ -1,0 +1,556 @@
+{
+  "meta": {
+    "appName": "TicketPulse",
+    "tagline": "Decentralised NFT ticketing with strict secondary-market control."
+  },
+  "common": {
+    "loading": "Loading…",
+    "tryAgain": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "submit": "Submit",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "loadMore": "Load more",
+    "viewOnExplorer": "View on Basescan",
+    "copyAddress": "Copy address",
+    "addressCopied": "Address copied",
+    "empty": "Nothing to show here yet.",
+    "connectWallet": "Connect wallet",
+    "disconnect": "Disconnect",
+    "switchNetwork": "Switch network",
+    "wrongNetwork": "Wrong network",
+    "explorerLabel": "Basescan"
+  },
+  "header": {
+    "logoLabel": "TicketPulse home",
+    "themeToggleLabel": "Toggle theme",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "mobileTitle": "TicketPulse",
+    "primaryNavLabel": "Primary navigation"
+  },
+  "nav": {
+    "marketplace": "Marketplace",
+    "myTickets": "My tickets",
+    "buyRequests": "Buy requests",
+    "createEvent": "Create event",
+    "organizer": "Organiser",
+    "howItWorks": "How it works",
+    "help": "Help"
+  },
+  "footer": {
+    "copyrightFormat": "© {year}",
+    "links": {
+      "howItWorks": "How it works",
+      "marketplace": "Marketplace",
+      "baseNetwork": "Base network",
+      "subgraph": "Subgraph Studio"
+    }
+  },
+  "errors": {
+    "page": {
+      "title": "Something went wrong",
+      "fallbackMessage": "An unexpected error happened while rendering this page."
+    },
+    "notFound": {
+      "code": "404 — Off the chain",
+      "title": "We couldn't find that page",
+      "description": "The link may have moved, or the event you're looking for hasn't been indexed yet by The Graph.",
+      "backHome": "Back to home"
+    },
+    "rejected": {
+      "title": "Transaction cancelled",
+      "description": "You declined the request in your wallet. Nothing was charged."
+    },
+    "default": {
+      "title": "Transaction failed"
+    },
+    "contract": {
+      "EventNotInSalePhase": {
+        "title": "Sale window closed",
+        "description": "Tickets can only be minted before the event starts."
+      },
+      "EventStarted": {
+        "title": "Event already started",
+        "description": "Listings and buy orders are frozen once the event begins."
+      },
+      "EventNotEnded": {
+        "title": "Event still running",
+        "description": "Organiser withdrawals unlock after the event ends."
+      },
+      "SoldOut": {
+        "title": "Sold out",
+        "description": "All primary-sale tickets are gone — try the secondary market or join the buy queue."
+      },
+      "WalletLimitExceeded": {
+        "title": "Wallet limit reached",
+        "description": "This wallet has hit the per-wallet ticket cap set by the organiser."
+      },
+      "IncorrectPayment": {
+        "title": "Incorrect amount",
+        "description": "Send exactly the listed price. The contract refuses partial or over-payment."
+      },
+      "NotTicketOwner": {
+        "title": "You do not own this ticket",
+        "description": "Only the current ticket holder can list it for sale."
+      },
+      "TicketAlreadyListed": {
+        "title": "Already listed",
+        "description": "This ticket is already in the sell queue."
+      },
+      "TicketNotListed": {
+        "title": "Not listed",
+        "description": "This ticket is not currently for sale."
+      },
+      "NoBuyOrder": {
+        "title": "No buy order",
+        "description": "You do not have an active buy order to cancel."
+      },
+      "NoSellOrder": {
+        "title": "No sell order matched",
+        "description": "No tickets are currently listed at the fixed resale price."
+      },
+      "BuyOrderNotOwner": {
+        "title": "Not your buy order",
+        "description": "Only the buyer who placed the order can cancel it."
+      },
+      "BuyOrderAlreadyMatched": {
+        "title": "Already matched",
+        "description": "This buy order has already been filled — the ticket is in your wallet."
+      },
+      "NothingToWithdraw": {
+        "title": "Nothing to withdraw",
+        "description": "Your balance for this event is already zero."
+      },
+      "TransferFailed": {
+        "title": "Transfer failed",
+        "description": "The ETH transfer was rejected by the recipient. Try again or contact support."
+      },
+      "InvalidParams": {
+        "title": "Invalid event parameters",
+        "description": "One of the event settings is out of range — double-check dates, supply, and percentages."
+      },
+      "MaxBatchExceeded": {
+        "title": "Too many tickets per transaction",
+        "description": "Mint at most {max} tickets per call for stable gas usage."
+      },
+      "InsufficientGasForQueueScan": {
+        "title": "Network is busy",
+        "description": "The queue cleanup ran out of gas. Try again — the next call will continue from where we left off."
+      },
+      "DirectTransfersDisabled": {
+        "title": "Direct transfers disabled",
+        "description": "Tickets can only move through the marketplace so royalties are always collected."
+      },
+      "AlreadyInBuyQueue": {
+        "title": "Already in queue",
+        "description": "You already have an active buy order for this event — cancel it first to place a new one."
+      }
+    }
+  },
+  "landing": {
+    "badgeNetwork": "{appName} · Base L2",
+    "hero": {
+      "headline": "NFT tickets that fans can trust — and organisers can profit from forever.",
+      "subheadline": "TicketPulse turns every ticket into a cryptographically signed, royalty-paying digital asset on the Base network.",
+      "ctaOrganizer": "Become an organiser",
+      "ctaBuyer": "Find tickets"
+    },
+    "trustCards": {
+      "wallet": {
+        "title": "Your ticket, your wallet",
+        "description": "Non-custodial — TicketPulse never holds your funds or NFTs."
+      },
+      "fair": {
+        "title": "Fair queues, fixed prices",
+        "description": "FIFO resale at a markup set by the organiser — bots can't snipe."
+      },
+      "identity": {
+        "title": "Cryptographic identity",
+        "description": "EIP-712 signatures bind your name to your ticket without leaking PII."
+      }
+    },
+    "features": {
+      "transparency": {
+        "title": "Cryptographic transparency",
+        "description": "Every ticket, sale, and royalty is on-chain. No hidden allocations, no opaque dynamic pricing."
+      },
+      "fairResale": {
+        "title": "Strict FIFO resale",
+        "description": "First-in-first-out queues at a single fixed markup. Bots can't snipe, scalpers can't dump."
+      },
+      "royalties": {
+        "title": "Automatic royalties",
+        "description": "A configurable share of every resale flows back to the organiser, enforced by smart contract."
+      },
+      "privacy": {
+        "title": "Privacy by default",
+        "description": "Your name never touches the blockchain. Only its hash does — enough to validate at the gate."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "whatIsNft": {
+          "question": "What is an NFT ticket, in plain terms?",
+          "answer": "An NFT ticket is a unique digital token bound to your wallet and verified at the venue. Think of it like a paper ticket with an unforgeable serial number — except no one can copy it."
+        },
+        "refunds": {
+          "question": "Can I refund my ticket?",
+          "answer": "Refunds are at the organiser's discretion and are not part of the protocol. You can always resell at the fixed price on the secondary market."
+        },
+        "fees": {
+          "question": "What fees do you charge?",
+          "answer": "TicketPulse itself charges no platform fee. You pay the Base network gas (typically pennies) plus whatever royalty the organiser configured."
+        }
+      }
+    },
+    "cta": {
+      "readGuide": "Read the guide"
+    }
+  },
+  "howItWorks": {
+    "title": "How TicketPulse works",
+    "intro": "Three pillars: a wallet you control, an NFT only you can use, and a smart contract that enforces fair rules.",
+    "wallets": {
+      "title": "Step 1 — Get a wallet",
+      "body": "A wallet is the key to everything you own on the blockchain. We support MetaMask, Phantom, Coinbase Wallet, and any wallet that speaks WalletConnect."
+    },
+    "buy": {
+      "title": "Step 2 — Buy a ticket",
+      "body": "Pick an event, enter your name (latin alphabet, exactly as on your ID), and confirm two prompts in your wallet: a free signature that proves your identity, then the actual purchase."
+    },
+    "attend": {
+      "title": "Step 3 — Show your QR at the door",
+      "body": "Generate a fresh QR code from My Tickets. It contains both your identity proof and a five-minute liveness proof. Pair it with your ID and you're in."
+    },
+    "supportedWallets": {
+      "title": "Supported wallets",
+      "description": "TicketPulse uses RainbowKit + WalletConnect v2 — anything on this list works:",
+      "items": {
+        "metamask": "MetaMask",
+        "phantom": "Phantom",
+        "coinbase": "Coinbase Wallet",
+        "rainbow": "Rainbow",
+        "trust": "Trust Wallet",
+        "ledger": "Ledger (via MetaMask)",
+        "trezor": "Trezor (via MetaMask)",
+        "other": "…and any WalletConnect-compatible wallet"
+      }
+    }
+  },
+  "wallet": {
+    "guard": {
+      "title": "Connect your wallet to continue",
+      "description": "TicketPulse is wallet-first by design: without a wallet you can't buy, list, or attend.",
+      "cta": "Connect wallet"
+    },
+    "accountMismatch": {
+      "title": "Wallet account changed",
+      "description": "You signed in as {expected} but your wallet is now on {actual}.",
+      "switchBack": "Switch wallet back",
+      "loginAgain": "Sign in with the new account"
+    },
+    "wrongNetwork": {
+      "title": "Wrong network",
+      "description": "Please switch your wallet to {chainName} to continue.",
+      "cta": "Switch to {chainName}"
+    }
+  },
+  "tx": {
+    "preparing": "Preparing transaction…",
+    "awaitingSignature": "Confirm in your wallet",
+    "pending": "Transaction broadcast — waiting for confirmation",
+    "confirming": "Including in block…",
+    "confirmed": "Confirmed",
+    "failed": "Transaction failed",
+    "rejected": "You rejected the transaction",
+    "explorerAction": "Basescan",
+    "descriptions": {
+      "createEvent": "Create event \"{title}\"",
+      "mintTickets": "{count, plural, one {Mint # ticket} other {Mint # tickets}}",
+      "listForSale": "List ticket #{tokenId} for sale",
+      "cancelSell": "Remove ticket #{tokenId} from sale",
+      "joinBuyQueue": "Join the buy queue for \"{title}\"",
+      "cancelBuyOrder": "Cancel buy order",
+      "withdrawPrimary": "Withdraw primary sales",
+      "withdrawRoyalty": "Withdraw royalties",
+      "withdrawAllOrganizer": "Withdraw all organiser earnings",
+      "withdrawSeller": "Withdraw seller balance"
+    }
+  },
+  "events": {
+    "list": {
+      "title": "Marketplace",
+      "subtitle": "Browse every event indexed by The Graph — buy on the primary market, or join a FIFO queue on the secondary.",
+      "search": "Search by event name",
+      "filterFromLabel": "From date",
+      "filterToLabel": "Until date",
+      "empty": "No active events right now. Check back soon!"
+    },
+    "statuses": {
+      "soldOut": "Sold out",
+      "available": "Available",
+      "happeningNow": "NOW",
+      "completed": "Completed"
+    },
+    "card": {
+      "fromLabel": "From",
+      "activeOrders": "{count, plural, =0 {No active orders} one {# active order} other {# active orders}}",
+      "ticketsRatio": "{minted} / {total}"
+    },
+    "phaseTimer": {
+      "doorsOpenIn": "Doors open in",
+      "liveNow": "Live now"
+    },
+    "marketStats": {
+      "sellQueue": "Sell queue",
+      "buyQueue": "Buy queue",
+      "available": "Available"
+    },
+    "detail": {
+      "organizerLabel": "Organiser",
+      "contractLink": "Contract on Basescan",
+      "primaryPriceLabel": "Primary price",
+      "infoTitle": "Event details",
+      "descriptionUnavailable": "Description unavailable — IPFS gateway timeout.",
+      "rows": {
+        "primaryPrice": "Primary price",
+        "resalePrice": "Resale price",
+        "royalty": "Royalty",
+        "resaleMarkup": "Resale markup",
+        "perWalletLimit": "Per-wallet limit",
+        "totalSupply": "Total supply"
+      }
+    },
+    "marketplacePanel": {
+      "title": "Marketplace",
+      "primaryTab": "Buy from organiser",
+      "resaleTab": "Buy from queue",
+      "primaryPriceLabel": "Primary price",
+      "buyTicketCta": "Buy ticket",
+      "buyPrimaryDialogTitle": "Buy on the primary market",
+      "resalePriceLabel": "Resale price (fixed)",
+      "resalePriceHint": "Locked on contract until matched or cancelled.",
+      "lockSummary": "You'll sign an identity binding, then a payable transaction locking <amount>{amount}</amount>. The contract refunds you instantly if you cancel before matching.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "joinQueueCta": "Join the buy queue",
+      "banners": {
+        "alreadyHaveBuyOrder": "You already have an active buy order on this event. Manage it from \"Buy requests\" in the navigation.",
+        "alreadyHoldTickets": "{count, plural, one {You hold # ticket for this event. Find it in \"My tickets\".} other {You hold # tickets for this event. Find them in \"My tickets\".}}",
+        "eventInProgress": "The event is in progress — primary sales and secondary trading are frozen.",
+        "eventEnded": "The event has ended — collectible status only."
+      }
+    },
+    "create": {
+      "title": "Create a new event",
+      "subtitle": "Deploy a minimal-proxy NFT-ticket contract on Base. Royalty and resale rules are immutable once the event is on-chain.",
+      "sections": {
+        "basics": "Basic information",
+        "ticketing": "Ticketing & market rules",
+        "cover": "Cover image",
+        "submission": "Submission"
+      },
+      "fields": {
+        "title": "Event title",
+        "titlePlaceholder": "The Neighbourhood — World Tour 2026",
+        "description": "Description",
+        "location": "Venue / location",
+        "locationPlaceholder": "Palace of Sports, Kyiv, Ukraine",
+        "startTime": "Sale start (your time)",
+        "endTime": "Event end (your time)",
+        "ticketType": "Ticket type",
+        "ticketTypeHint": "e.g. VIP, General Admission, Early Bird",
+        "ticketSymbol": "NFT symbol",
+        "ticketSymbolHint": "2–10 uppercase chars (e.g. TNWT26)",
+        "maxSupply": "Total supply",
+        "maxTicketsPerWallet": "Max per wallet",
+        "maxTicketsPerWalletHint": "1–6 — protects against scalping",
+        "royaltyPct": "Royalty %",
+        "royaltyPctHint": "0–20% — share of every resale that returns to you",
+        "markupPct": "Resale markup %",
+        "markupPctHint": "0–100% — fixed markup over the nominal price"
+      },
+      "cover": {
+        "uploadCta": "Click to upload",
+        "rules": "JPG, PNG, or WebP. Min 1200×630px, max 5 MB. Stored on IPFS.",
+        "required": "Cover image is required",
+        "tooBig": "Max size {maxMb} MB",
+        "wrongType": "Use JPG, PNG or WebP"
+      },
+      "submission": {
+        "description": "Creating an event deploys a minimal-proxy clone of TicketPulseEvent. Once confirmed, your event becomes visible to all buyers.",
+        "submitCta": "Create event",
+        "submitting": "Creating event…",
+        "successToast": "Event submitted — waiting for confirmation",
+        "stages": {
+          "uploadingCover": "Uploading cover image to IPFS…",
+          "uploadingMetadata": "Uploading event description to IPFS…",
+          "awaitingSignature": "Confirm in your wallet",
+          "pending": "Deploying event contract…",
+          "success": "Event created — redirecting…"
+        }
+      },
+      "converter": {
+        "label": "Nominal ticket price",
+        "toggleToEur": "Set in EUR instead",
+        "toggleToEth": "Back to ETH input",
+        "equivalent": "≈ {amount} (Chainlink)",
+        "noRate": "—",
+        "warning": "The contract stores the equivalent in ETH at the current rate. The actual EUR amount your buyers see can fluctuate with the ETH price."
+      }
+    }
+  },
+  "mint": {
+    "limitReached": {
+      "title": "Wallet limit reached",
+      "description": "You already hold the maximum of {max} tickets for this event."
+    },
+    "step1": {
+      "title": "1. How many tickets?",
+      "availability": "{remaining} of {total} available · You own {owned} / {max}",
+      "perTxLimit": "Maximum {max} tickets per transaction (gas safety)."
+    },
+    "step2": {
+      "title": "2. Who are these tickets for?",
+      "warningIntro": "Enter each holder's name exactly as it appears on their ID, in the Latin alphabet. After purchase this information is bound to the ticket and ",
+      "warningStrong": "cannot be changed",
+      "ticketLabel": "Ticket #{index}",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "firstNamePlaceholder": "Ivan",
+      "lastNamePlaceholder": "Petrenko",
+      "acknowledgeImmutable": "I understand that this personalisation is permanent and cannot be modified after the transaction is confirmed."
+    },
+    "step3": {
+      "title": "3. Review & pay",
+      "ticketsRow": "Tickets",
+      "totalRow": "Total",
+      "submitCta": "{count, plural, one {Buy # ticket} other {Buy # tickets}}",
+      "working": "Working…",
+      "signingProgress": "Signing identity {signed}/{total}…",
+      "successToast": "Transaction submitted — your tickets are on the way."
+    },
+    "errors": {
+      "submissionFailed": "Submission failed"
+    }
+  },
+  "tickets": {
+    "page": {
+      "title": "My tickets",
+      "subtitle": "Every NFT ticket bound to your wallet. Open one to show its entry QR code or manage resale."
+    },
+    "tabs": {
+      "ready": "Ready ({count})",
+      "onSale": "On sale ({count})",
+      "soldPending": "Pending payout ({count})",
+      "collectible": "Collectible ({count})"
+    },
+    "empty": {
+      "ready": "No active tickets yet.",
+      "onSale": "Nothing listed right now.",
+      "soldPending": "No pending payouts.",
+      "collectible": "No collectibles yet — events you attended live here."
+    },
+    "soldPendingHint": "Event {eventId} has a withdrawable seller balance.",
+    "statuses": {
+      "ready": "Ready to use",
+      "onSale": "Awaiting buyer",
+      "soldPending": "Sold — withdraw available",
+      "soldWithdrawn": "Sold — paid out",
+      "collectible": "Collectible"
+    },
+    "card": {
+      "tokenLabel": "#{tokenId} · {type}",
+      "boughtAt": "Bought at",
+      "lastResale": "Last resale",
+      "holder": "Holder",
+      "explorerLabel": "Basescan",
+      "showEntryQr": "Show entry QR",
+      "listForSale": "List for resale",
+      "removeFromSale": "Remove from sale",
+      "withdrawProceeds": "Withdraw proceeds",
+      "collectibleHint": "Collectible — keep forever"
+    }
+  },
+  "buyRequests": {
+    "page": {
+      "title": "My buy requests",
+      "subtitle": "Every queue position your wallet currently holds — plus historical fills and cancellations."
+    },
+    "tabs": {
+      "active": "Active ({count})",
+      "completed": "Completed ({count})",
+      "cancelled": "Cancelled ({count})"
+    },
+    "empty": {
+      "active": "No active buy orders. Queue up on an event detail page.",
+      "completed": "No buy orders have been filled yet.",
+      "cancelled": "No cancellations yet."
+    },
+    "active": {
+      "queuedAt": "Queued {when} · Position #{position}",
+      "lockedHint": "Locked on contract",
+      "cancelCta": "Cancel & refund"
+    },
+    "history": {
+      "matchedFormat": "Matched · Token #{tokenId}",
+      "matchedUnknown": "Matched",
+      "cancelledFormat": "Cancelled by you",
+      "paidFormat": "Paid {amount}",
+      "refundedFormat": "Refunded {amount}"
+    }
+  },
+  "organizer": {
+    "page": {
+      "title": "Organiser",
+      "subtitle": "Manage your events, track sales, and withdraw earnings once they end.",
+      "createCta": "Create event"
+    },
+    "empty": {
+      "headline": "You haven't created any events yet.",
+      "cta": "Create your first event"
+    },
+    "row": {
+      "soldStatLabel": "Sold",
+      "primaryStatLabel": "Primary",
+      "royaltyStatLabel": "Royalties",
+      "startsAt": "Starts {when}",
+      "withdrawAll": "Withdraw all"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}",
+      "label": "Pagination"
+    }
+  },
+  "qr": {
+    "dialogTitle": "Entry code",
+    "title": "Entry code",
+    "validFor": "Valid for {minutes}:{seconds}",
+    "refresh": "Refresh code",
+    "generate": "Generate code",
+    "instructions": "Show this code and a matching ID to enter.",
+    "instructionsWithHolder": "{instructions} Name on the door: <name>{ownerName}</name>.",
+    "clickToGenerate": "Click \"Generate\" to produce your first code.",
+    "recoveryWarning": "We couldn't find a local identity record for this ticket. You can regenerate it by re-signing your original name — same wallet required.",
+    "renderError": "QR render failed: {message}",
+    "ariaLabel": "Entry QR code",
+    "nameLabel": "Your full name",
+    "namePlaceholder": "John Doe",
+    "nameHint": "Must match your ID exactly. This will be verified at entry.",
+    "nameRequired": "Please enter your name",
+    "walletRequired": "Wallet must be connected",
+    "signIdentity": "Sign identity",
+    "signingIdentity": "Signing...",
+    "identitySignFailed": "Failed to sign identity. Please try again."
+  }
+}

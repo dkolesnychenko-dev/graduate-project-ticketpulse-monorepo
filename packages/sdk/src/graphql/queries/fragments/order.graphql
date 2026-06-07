@@ -1,0 +1,43 @@
+fragment SellOrderFields on SellOrder {
+  id
+  status
+  price
+  createdAt
+  createdLogIndex
+  executedAt
+  cancelledAt
+  seller {
+    id
+  }
+  ticket {
+    id
+    tokenId
+  }
+  event {
+    id
+    title
+    ticketSymbol
+  }
+}
+
+fragment BuyOrderFields on BuyOrder {
+  id
+  orderId
+  status
+  amountLocked
+  identityHash
+  createdAt
+  executedAt
+  cancelledAt
+  refundedAmount
+  buyer {
+    id
+  }
+  event {
+    ...EventCardFields
+  }
+  matchedTicket {
+    id
+    tokenId
+  }
+}
