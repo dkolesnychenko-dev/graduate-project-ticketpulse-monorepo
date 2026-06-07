@@ -1,0 +1,43 @@
+fragment TicketCardFields on Ticket {
+  id
+  tokenId
+  identityHash
+  isOnSale
+  mintPrice
+  lastResalePrice
+  mintedAt
+  updatedAt
+  currentOwner {
+    id
+  }
+  originalMinter {
+    id
+  }
+  event {
+    ...EventCardFields
+  }
+  activeSellOrder {
+    id
+    price
+    createdAt
+  }
+}
+
+fragment TicketDetailFields on Ticket {
+  ...TicketCardFields
+  mintedTxHash
+  transferHistory(orderBy: createdAt, orderDirection: asc) {
+    id
+    type
+    createdAt
+    txHash
+    from {
+      id
+    }
+    to {
+      id
+    }
+    price
+    royaltyAmount
+  }
+}

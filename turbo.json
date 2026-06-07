@@ -7,14 +7,15 @@
     },
     "codegen": {
       "dependsOn": ["^build"],
-      "outputs": ["generated/**"]
+      "outputs": ["generated/**", "src/**/__generated__/**"]
     },
     "test": {
       "dependsOn": ["build"]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build", "codegen"]
     },
     "lint": {
       "outputs": []

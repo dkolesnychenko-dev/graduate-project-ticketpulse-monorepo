@@ -17,6 +17,14 @@
 // ═══════════════════════════════════════════════════════════════════════
 
 /**
+ * Current schema version for off-chain EventMetadata stored in IPFS.
+ *
+ * Increment this string when the `EventMetadata` shape changes in a
+ * backward-incompatible way so the upload route can reject stale clients.
+ */
+export const EVENT_METADATA_SCHEMA_VERSION = '1.0.0' as const
+
+/**
  * Off-chain event metadata stored in IPFS.
  *
  * This JSON is uploaded BEFORE calling `TicketPulseFactory.createEvent()`.
@@ -28,12 +36,12 @@
  */
 export interface EventMetadata {
   /** Schema version for forward compatibility */
-  schemaVersion: '1.0.0'
+  schemaVersion: typeof EVENT_METADATA_SCHEMA_VERSION
 
   /** Detailed event description (Markdown allowed) */
   description: string
 
-  /** Human-readable location string, e.g. "Національний палац мистецтв «Україна», Київ" */
+  /** Human-readable location string, e.g. "National Palace of Arts 'Ukraina', Kyiv" */
   location: string
 }
 

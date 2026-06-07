@@ -1,0 +1,11 @@
+# Header / dashboard quick-summary — counts only, no heavy collections.
+query UserSummary($id: ID!) {
+  user(id: $id) {
+    id
+    totalEventsCreated
+    totalTicketsBought
+    totalTicketsSold
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,41 @@
+# Core event fields used everywhere a card / detail page renders.
+# Keep this minimal so list queries stay cheap; detail queries add more.
+
+fragment EventCardFields on Event {
+  id
+  organizer {
+    id
+  }
+  createdAt
+  startTime
+  endTime
+
+  nominalPrice
+  secondaryMarketPrice
+  maxSupply
+  maxTicketsPerWallet
+  totalMinted
+
+  royaltyPercentage
+  markupPercentage
+
+  title
+  ticketType
+  ticketSymbol
+  ipfsCoverImageCid
+  ipfsMetadataCid
+
+  activeSellOrdersCount
+  activeBuyOrdersCount
+}
+
+# Adds market / financial counters needed on the detail page (F-23) and
+# organiser analytics dashboard (F-3).
+fragment EventStatsFields on Event {
+  ...EventCardFields
+  totalPrimaryVolume
+  totalSecondaryVolume
+  totalRoyaltiesCollected
+  totalResales
+  updatedAt
+}

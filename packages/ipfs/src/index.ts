@@ -9,8 +9,9 @@
 //
 // ═══════════════════════════════════════════════════════════════════════
 
-// --- Types ---
-export type { EventMetadata, UploadResult, IpfsConfig } from './types.js'
+// --- Types & Constants ---
+export { EVENT_METADATA_SCHEMA_VERSION } from './types'
+export type { EventMetadata, UploadResult, IpfsConfig } from './types'
 
 // --- Client ---
 export {
@@ -18,18 +19,19 @@ export {
   isIpfsAvailable,
   resetClient,
   LOCAL_IPFS_CONFIG,
-} from './client.js'
+} from './client'
 
 // --- Upload (Write) ---
-export { uploadFile, uploadEventMetadata } from './uploader.js'
+export { uploadFile, uploadEventMetadata } from './uploader'
 
 // --- Fetch (Read) ---
-export { fetchEventMetadata, fetchFile } from './fetcher.js'
+export { fetchEventMetadata, fetchFile } from './fetcher'
 
 // --- Gateway URL helpers ---
 export {
+  getGatewayUrls,
   cidToGatewayUrl,
   ipfsUriToGatewayUrl,
   stripIpfsPrefix,
   cidToIpfsUri,
-} from './gateway.js'
+} from './gateway'

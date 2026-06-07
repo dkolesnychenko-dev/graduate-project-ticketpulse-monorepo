@@ -1,0 +1,474 @@
+# ─────────────────────────────────────────────────────────────────────
+# Complete offline schema for graphql-codegen.
+#
+# The Graph Protocol auto-generates a rich schema from the raw
+# schema.graphql at deploy/indexing time.  That generated schema:
+#   • adds OrderDirection enum and {Entity}_filter / {Entity}_orderBy types
+#   • adds pagination/filter args to every collection and @derivedFrom field
+#   • adds a Query type with single-entity and collection queries
+#
+# graphql-codegen in offline mode can't introspect a live node, so this
+# file re-declares the full schema in the form codegen expects.
+# schema.graphql is NOT loaded in offline mode — entity types here replace it.
+#
+# Maintenance rule: when you add / remove a field in schema.graphql, mirror
+# the change here.  In CI / production use GRAPHQL_SCHEMA_URL to introspect
+# the deployed subgraph for authoritative types.
+# ─────────────────────────────────────────────────────────────────────
+
+# ─── Domain enums (mirrored from schema.graphql) ─────────────────────
+
+enum OrderStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ActivityType {
+  EVENT_CREATED
+  TICKET_MINTED
+  SELL_ORDER_CREATED
+  SELL_ORDER_CANCELLED
+  BUY_ORDER_CREATED
+  BUY_ORDER_CANCELLED
+  ORDER_MATCHED
+  ORGANIZER_PRIMARY_WITHDRAWAL
+  ORGANIZER_ROYALTY_WITHDRAWAL
+  SELLER_WITHDRAWAL
+  QUEUE_BATCH_CLEANUP
+}
+
+# ─── The Graph auto-generated: shared ────────────────────────────────
+
+enum OrderDirection {
+  asc
+  desc
+}
+
+# ─── The Graph auto-generated: Event ─────────────────────────────────
+
+enum Event_orderBy {
+  id
+  organizer
+  createdAt
+  updatedAt
+  startTime
+  endTime
+  nominalPrice
+  maxSupply
+  maxTicketsPerWallet
+  totalMinted
+  royaltyPercentage
+  markupPercentage
+  secondaryMarketPrice
+  ipfsMetadataCid
+  title
+  ticketType
+  ipfsCoverImageCid
+  ticketSymbol
+  totalPrimaryVolume
+  totalSecondaryVolume
+  totalRoyaltiesCollected
+  totalResales
+  activeSellOrdersCount
+  activeBuyOrdersCount
+}
+
+input Event_filter {
+  id: ID
+  id_in: [ID!]
+  organizer: ID
+  organizer_in: [ID!]
+  startTime: BigInt
+  startTime_gt: BigInt
+  startTime_gte: BigInt
+  startTime_lt: BigInt
+  startTime_lte: BigInt
+  endTime: BigInt
+  endTime_gt: BigInt
+  endTime_gte: BigInt
+  endTime_lt: BigInt
+  endTime_lte: BigInt
+  createdAt: BigInt
+  createdAt_gt: BigInt
+  createdAt_gte: BigInt
+  createdAt_lt: BigInt
+  createdAt_lte: BigInt
+  totalMinted_gte: Int
+  totalMinted_lte: Int
+  and: [Event_filter!]
+  or: [Event_filter!]
+}
+
+# ─── The Graph auto-generated: Ticket ────────────────────────────────
+
+enum Ticket_orderBy {
+  id
+  tokenId
+  event
+  currentOwner
+  originalMinter
+  isOnSale
+  mintPrice
+  lastResalePrice
+  mintedAt
+  updatedAt
+}
+
+input Ticket_filter {
+  id: ID
+  id_in: [ID!]
+  event: String
+  currentOwner: String
+  currentOwner_in: [String!]
+  originalMinter: String
+  isOnSale: Boolean
+  mintedAt: BigInt
+  mintedAt_gt: BigInt
+  mintedAt_gte: BigInt
+  mintedAt_lt: BigInt
+  mintedAt_lte: BigInt
+  updatedAt: BigInt
+  updatedAt_gt: BigInt
+  updatedAt_gte: BigInt
+  updatedAt_lt: BigInt
+  updatedAt_lte: BigInt
+  and: [Ticket_filter!]
+  or: [Ticket_filter!]
+}
+
+# ─── The Graph auto-generated: ActivityLog ───────────────────────────
+
+enum ActivityLog_orderBy {
+  id
+  type
+  createdAt
+  blockNumber
+  txHash
+  logIndex
+  event
+  ticket
+  initiator
+  from
+  to
+  price
+  royaltyAmount
+  sellOrder
+  buyOrder
+}
+
+input ActivityLog_filter {
+  id: ID
+  type: ActivityType
+  type_in: [ActivityType!]
+  event: String
+  ticket: String
+  initiator: String
+  createdAt: BigInt
+  createdAt_gt: BigInt
+  createdAt_gte: BigInt
+  createdAt_lt: BigInt
+  createdAt_lte: BigInt
+  and: [ActivityLog_filter!]
+  or: [ActivityLog_filter!]
+}
+
+# ─── The Graph auto-generated: SellOrder ─────────────────────────────
+
+enum SellOrder_orderBy {
+  id
+  event
+  ticket
+  seller
+  price
+  createdAt
+  createdLogIndex
+  status
+  executedAt
+  cancelledAt
+}
+
+input SellOrder_filter {
+  id: ID
+  event: String
+  ticket: String
+  seller: String
+  status: OrderStatus
+  status_in: [OrderStatus!]
+  createdAt: BigInt
+  createdAt_gt: BigInt
+  createdAt_gte: BigInt
+  createdAt_lt: BigInt
+  createdAt_lte: BigInt
+  and: [SellOrder_filter!]
+  or: [SellOrder_filter!]
+}
+
+# ─── The Graph auto-generated: BuyOrder ──────────────────────────────
+
+enum BuyOrder_orderBy {
+  id
+  orderId
+  event
+  buyer
+  amountLocked
+  createdAt
+  status
+  executedAt
+  cancelledAt
+}
+
+input BuyOrder_filter {
+  id: ID
+  event: String
+  buyer: String
+  status: OrderStatus
+  status_in: [OrderStatus!]
+  createdAt: BigInt
+  createdAt_gt: BigInt
+  createdAt_gte: BigInt
+  createdAt_lt: BigInt
+  createdAt_lte: BigInt
+  and: [BuyOrder_filter!]
+  or: [BuyOrder_filter!]
+}
+
+# ─── The Graph auto-generated: Balance ───────────────────────────────
+
+enum Balance_orderBy {
+  id
+  event
+  user
+  primarySalesBalance
+  royaltyBalance
+  sellerBalance
+}
+
+input Balance_filter {
+  id: ID
+  event: String
+  user: String
+  and: [Balance_filter!]
+  or: [Balance_filter!]
+}
+
+# ─── The Graph auto-generated: User ──────────────────────────────────
+
+enum User_orderBy {
+  id
+  totalEventsCreated
+  totalTicketsBought
+  totalTicketsSold
+  createdAt
+  updatedAt
+}
+
+input User_filter {
+  id: ID
+  id_in: [ID!]
+  and: [User_filter!]
+  or: [User_filter!]
+}
+
+# ─── Entity types ─────────────────────────────────────────────────────
+# These mirror schema.graphql but without @entity / @derivedFrom directives
+# (not needed by codegen) and with pagination args on every collection field.
+
+type User {
+  id: ID!
+  totalEventsCreated: Int!
+  totalTicketsBought: Int!
+  totalTicketsSold: Int!
+  eventsCreated(first: Int, skip: Int, where: Event_filter, orderBy: Event_orderBy, orderDirection: OrderDirection): [Event!]!
+  ticketsOwned(first: Int, skip: Int, where: Ticket_filter, orderBy: Ticket_orderBy, orderDirection: OrderDirection): [Ticket!]!
+  activityHistory(first: Int, skip: Int, where: ActivityLog_filter, orderBy: ActivityLog_orderBy, orderDirection: OrderDirection): [ActivityLog!]!
+  sellOrders(first: Int, skip: Int, where: SellOrder_filter, orderBy: SellOrder_orderBy, orderDirection: OrderDirection): [SellOrder!]!
+  buyOrders(first: Int, skip: Int, where: BuyOrder_filter, orderBy: BuyOrder_orderBy, orderDirection: OrderDirection): [BuyOrder!]!
+  balances(first: Int, skip: Int, where: Balance_filter, orderBy: Balance_orderBy, orderDirection: OrderDirection): [Balance!]!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type Event {
+  id: ID!
+  organizer: User!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  updatedAt: BigInt!
+  updatedTxHash: Bytes!
+  startTime: BigInt!
+  endTime: BigInt!
+  nominalPrice: BigInt!
+  maxSupply: Int!
+  maxTicketsPerWallet: Int!
+  totalMinted: Int!
+  royaltyPercentage: Int!
+  markupPercentage: Int!
+  secondaryMarketPrice: BigInt!
+  ipfsMetadataCid: String
+  title: String
+  ticketType: String
+  ipfsCoverImageCid: String
+  ticketSymbol: String
+  totalPrimaryVolume: BigInt!
+  totalSecondaryVolume: BigInt!
+  totalRoyaltiesCollected: BigInt!
+  totalResales: Int!
+  activeSellOrdersCount: Int!
+  activeBuyOrdersCount: Int!
+  sellOrders(first: Int, skip: Int, where: SellOrder_filter, orderBy: SellOrder_orderBy, orderDirection: OrderDirection): [SellOrder!]!
+  buyOrders(first: Int, skip: Int, where: BuyOrder_filter, orderBy: BuyOrder_orderBy, orderDirection: OrderDirection): [BuyOrder!]!
+  tickets(first: Int, skip: Int, where: Ticket_filter, orderBy: Ticket_orderBy, orderDirection: OrderDirection): [Ticket!]!
+  activityLogs(first: Int, skip: Int, where: ActivityLog_filter, orderBy: ActivityLog_orderBy, orderDirection: OrderDirection): [ActivityLog!]!
+}
+
+type Ticket {
+  id: ID!
+  tokenId: Int!
+  event: Event!
+  currentOwner: User!
+  originalMinter: User!
+  identityHash: Bytes!
+  isOnSale: Boolean!
+  activeSellOrder: SellOrder
+  mintPrice: BigInt!
+  lastResalePrice: BigInt
+  mintedAt: BigInt!
+  mintedTxHash: Bytes!
+  updatedAt: BigInt!
+  updatedTxHash: Bytes!
+  transferHistory(first: Int, skip: Int, where: ActivityLog_filter, orderBy: ActivityLog_orderBy, orderDirection: OrderDirection): [ActivityLog!]!
+}
+
+type SellOrder {
+  id: ID!
+  event: Event!
+  ticket: Ticket!
+  seller: User!
+  price: BigInt!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  createdLogIndex: Int!
+  status: OrderStatus!
+  executedAt: BigInt
+  executedTxHash: Bytes
+  buyer: User
+  royaltyPaid: BigInt
+  sellerReceived: BigInt
+  cancelledAt: BigInt
+  cancelledTxHash: Bytes
+}
+
+type BuyOrder {
+  id: ID!
+  orderId: Int!
+  event: Event!
+  buyer: User!
+  amountLocked: BigInt!
+  identityHash: Bytes!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  status: OrderStatus!
+  executedAt: BigInt
+  executedTxHash: Bytes
+  matchedTicket: Ticket
+  seller: User
+  cancelledAt: BigInt
+  cancelledTxHash: Bytes
+  refundedAmount: BigInt
+}
+
+type Balance {
+  id: ID!
+  event: Event!
+  user: User!
+  primarySalesBalance: BigInt!
+  royaltyBalance: BigInt!
+  sellerBalance: BigInt!
+}
+
+type ActivityLog {
+  id: ID!
+  type: ActivityType!
+  createdAt: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+  logIndex: Int!
+  event: Event!
+  ticket: Ticket
+  initiator: User!
+  from: User
+  to: User
+  price: BigInt
+  royaltyAmount: BigInt
+  sellOrder: SellOrder
+  buyOrder: BuyOrder
+}
+
+# ─── Query type ───────────────────────────────────────────────────────
+# The Graph generates these root query fields for every @entity type.
+
+type Query {
+  event(id: ID!): Event
+  events(
+    first: Int
+    skip: Int
+    where: Event_filter
+    orderBy: Event_orderBy
+    orderDirection: OrderDirection
+  ): [Event!]!
+
+  ticket(id: ID!): Ticket
+  tickets(
+    first: Int
+    skip: Int
+    where: Ticket_filter
+    orderBy: Ticket_orderBy
+    orderDirection: OrderDirection
+  ): [Ticket!]!
+
+  user(id: ID!): User
+  users(
+    first: Int
+    skip: Int
+    where: User_filter
+    orderBy: User_orderBy
+    orderDirection: OrderDirection
+  ): [User!]!
+
+  sellOrder(id: ID!): SellOrder
+  sellOrders(
+    first: Int
+    skip: Int
+    where: SellOrder_filter
+    orderBy: SellOrder_orderBy
+    orderDirection: OrderDirection
+  ): [SellOrder!]!
+
+  buyOrder(id: ID!): BuyOrder
+  buyOrders(
+    first: Int
+    skip: Int
+    where: BuyOrder_filter
+    orderBy: BuyOrder_orderBy
+    orderDirection: OrderDirection
+  ): [BuyOrder!]!
+
+  balance(id: ID!): Balance
+  balances(
+    first: Int
+    skip: Int
+    where: Balance_filter
+    orderBy: Balance_orderBy
+    orderDirection: OrderDirection
+  ): [Balance!]!
+
+  activityLog(id: ID!): ActivityLog
+  activityLogs(
+    first: Int
+    skip: Int
+    where: ActivityLog_filter
+    orderBy: ActivityLog_orderBy
+    orderDirection: OrderDirection
+  ): [ActivityLog!]!
+}

@@ -1,0 +1,98 @@
+{
+  "name": "@ticketpulse/sdk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared TicketPulse SDK: types, Wagmi/Apollo config, identity (EIP-712), services (RichEvent, Chainlink), GraphQL queries and codegen output. Pure logic — no React.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "import": "./src/types/index.ts",
+      "types": "./src/types/index.ts"
+    },
+    "./config": {
+      "import": "./src/config/index.ts",
+      "types": "./src/config/index.ts"
+    },
+    "./constants": {
+      "import": "./src/constants/index.ts",
+      "types": "./src/constants/index.ts"
+    },
+    "./contracts": {
+      "import": "./src/contracts/index.ts",
+      "types": "./src/contracts/index.ts"
+    },
+    "./wagmi": {
+      "import": "./src/wagmi/index.ts",
+      "types": "./src/wagmi/index.ts"
+    },
+    "./apollo": {
+      "import": "./src/apollo/index.ts",
+      "types": "./src/apollo/index.ts"
+    },
+    "./graphql": {
+      "import": "./src/graphql/index.ts",
+      "types": "./src/graphql/index.ts"
+    },
+    "./identity": {
+      "import": "./src/identity/index.ts",
+      "types": "./src/identity/index.ts"
+    },
+    "./services": {
+      "import": "./src/services/index.ts",
+      "types": "./src/services/index.ts"
+    },
+    "./formatting": {
+      "import": "./src/formatting/index.ts",
+      "types": "./src/formatting/index.ts"
+    },
+    "./errors": {
+      "import": "./src/errors/index.ts",
+      "types": "./src/errors/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "pnpm codegen && tsup",
+    "dev": "tsup --watch",
+    "codegen": "pnpm sync:abis && pnpm codegen:graphql",
+    "codegen:graphql": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --config codegen.ts --watch",
+    "sync:abis": "node scripts/sync-abis.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist src/graphql/__generated__",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ --ext .ts",
+    "format": "prettier --write \"src/**/*.{ts,graphql}\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,graphql}\" \"tests/**/*.ts\""
+  },
+  "dependencies": {
+    "@apollo/client": "^3.13.8",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@ticketpulse/ipfs": "workspace:*",
+    "graphql": "^16.10.0",
+    "viem": "^2.31.0",
+    "wagmi": "^2.15.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/client-preset": "^4.7.0",
+    "@graphql-codegen/typescript": "^4.1.5",
+    "@graphql-codegen/typescript-operations": "^4.4.1",
+    "@types/node": "^22.10.5",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "prettier": "^3.2.5",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.1.4"
+  }
+}

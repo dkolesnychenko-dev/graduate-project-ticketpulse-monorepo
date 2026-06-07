@@ -115,24 +115,48 @@ While the GraphQL API is primary, you can inspect raw PostgreSQL data:
 
 ## 🚀 Production Workflow (Subgraph Studio)
 
-For Testnet (`base-sepolia`) and Mainnet (`base`), we deploy to **The Graph Studio**.
+For Testnet (`base-sepolia`) and Mainnet (`base`), we publish to
+**The Graph Studio** — Edge & Node's hosted indexer that issues a
+queryable GraphQL endpoint backed by the decentralised Graph Network.
 
 ### 1. Prepare Subgraph Studio
-1. Go to [Subgraph Studio](https://thegraph.com/studio/).
-2. Create a new subgraph (e.g., `ticketpulse-sepolia`).
-3. Copy your unique **Deploy Key**.
 
-### 2. Deploy Smart Contracts
-Deploy the Factory to Base Sepolia or Base Mainnet.
+1. Visit <https://thegraph.com/studio/> and connect your wallet.
+2. Click **Create a Subgraph** — name it something explicit like
+   `ticketpulse-sepolia` or `ticketpulse-mainnet`. Each chain typically
+   gets its own subgraph in Studio (the slug becomes part of the
+   query URL).
+3. From the new subgraph's dashboard, copy:
+   - **Deploy Key** — used by `graph deploy` to authenticate (private,
+     never commit).
+   - **Query URL** — the public GraphQL endpoint your frontend will
+     point at. Looks like
+     `https://api.studio.thegraph.com/query/<id>/ticketpulse-sepolia/version/latest`.
+4. Take note of the **Subgraph slug** (e.g. `ticketpulse-sepolia`).
+   It's the second argument to `graph deploy` and is set in the
+   `deploy:studio:*` scripts.
 
-### 3. Authenticate CLI
+### 2. Deploy the Smart Contracts
+
+Run [`pnpm --filter @ticketpulse/contracts deploy:base-sepolia`](../contracts/README.md#-production--testnet-deployment)
+(or `:base`) — it prints the Factory address and writes broadcast
+metadata to `packages/contracts/broadcast/Deploy.s.sol/<chainId>/run-latest.json`.
+You'll need that address in step 4.
+
+### 3. Authenticate the CLI
+
 ```bash
 pnpm auth:studio
-# Paste your Deploy Key when prompted
+# Paste the Deploy Key from step 1.3 when prompted.
 ```
 
+The Deploy Key is stored in `~/.npm/_npmrc` for the `@graphprotocol`
+scope — it never leaves your machine.
+
 ### 4. Update Production Configuration
-Update `networks.json` manually **once** after your contract deployment:
+
+Update `networks.json` **once per chain** with the Factory address you
+just deployed:
 
 ```json
 "base-sepolia": {
@@ -143,8 +167,17 @@ Update `networks.json` manually **once** after your contract deployment:
 }
 ```
 
+`startBlock` is the block number containing the Factory's `EventCreated`
+emission — usually the deployment transaction's block. Setting it
+correctly means Graph Node skips re-scanning the entire chain history.
+
+> [!TIP]
+> Grab the block number from the Basescan transaction page or from
+> `run-latest.json` (`receipts[0].blockNumber`).
+
 ### 5. Deploy to Studio
-The build system handles the templating for you:
+
+The build system handles all manifest templating + ABI codegen for you:
 
 **For Base Sepolia:**
 ```bash
@@ -156,7 +189,26 @@ pnpm deploy:studio:sepolia
 pnpm deploy:studio:mainnet
 ```
 
-*These commands will automatically run `sync-networks.js <network>` to generate the correct `subgraph.yaml` from the template before deploying.*
+These commands run `sync-networks.js <network>` automatically to
+generate `subgraph.yaml` from `subgraph.template.yaml` with the right
+network + address before calling `graph deploy`.
+
+After a successful deploy you'll see a "Version" hash and a sync
+progress meter in Studio. Wait for the indexer to reach the latest
+block before pointing the frontend at it.
+
+### 6. Wire the Frontend
+
+Copy the Query URL from step 1.3 into `apps/web/.env.local`:
+
+```dotenv
+NEXT_PUBLIC_SUBGRAPH_URL=https://api.studio.thegraph.com/query/<id>/ticketpulse-sepolia/version/latest
+```
+
+Optional: gate the endpoint with a [Studio API Key](https://thegraph.com/docs/en/subgraphs/quick-start/#authorize-your-deployment)
+for higher rate limits, then set `GRAPH_API_KEY` server-side — it's
+attached as `Authorization: Bearer <key>` by `apps/web/api/graphql/route.ts`
+and never reaches the client bundle.
 
 ---
 

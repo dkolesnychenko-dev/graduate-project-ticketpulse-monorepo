@@ -1,0 +1,35 @@
+# All five sections of F-7 are filtered on the same Ticket query — the UI
+# bucketises in JS using `isOnSale`, `event.endTime`, and balance data.
+# We fetch balances in a separate query (`MyBalances`) so detail pages
+# can refetch tickets without re-reading the balance graph.
+query MyTickets(
+  $owner: String!
+  $first: Int!
+  $createdAt_lt: BigInt
+) {
+  tickets(
+    first: $first
+    where: {
+      currentOwner: $owner
+      mintedAt_lt: $createdAt_lt
+    }
+    orderBy: mintedAt
+    orderDirection: desc
+  ) {
+    ...TicketCardFields
+  }
+}
+
+query TicketDetail($id: ID!) {
+  ticket(id: $id) {
+    ...TicketDetailFields
+  }
+}
+
+# F-3 / F-22 — every balance row for a given user, used to drive the
+# "Withdraw" UI on tickets and on the organiser dashboard.
+query MyBalances($user: String!) {
+  balances(where: { user: $user }) {
+    ...BalanceFields
+  }
+}

@@ -1,0 +1,42 @@
+# Buyer marketplace (F-5): cursor pagination using `createdAt_lt` so the
+# subgraph never has to compute large OFFSETs.
+#
+# The default filter (NFR / F-5) shows events with `startTime_gte` = today,
+# sorted ASC. We sort by `startTime` so the soonest events surface first.
+query EventsList(
+  $first: Int!
+  $where: Event_filter
+  $orderBy: Event_orderBy = startTime
+  $orderDirection: OrderDirection = asc
+) {
+  events(
+    first: $first
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    ...EventCardFields
+  }
+}
+
+# Organiser dashboard (F-2): offset pagination because organisers
+# typically want to jump to "page 7" of their portfolio.
+query OrganizerEventsPage(
+  $skip: Int!
+  $first: Int!
+  $organizer: ID!
+) {
+  events(
+    skip: $skip
+    first: $first
+    where: { organizer: $organizer }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
+    ...EventStatsFields
+  }
+  user(id: $organizer) {
+    id
+    totalEventsCreated
+  }
+}

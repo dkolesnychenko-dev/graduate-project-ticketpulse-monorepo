@@ -1,0 +1,13 @@
+fragment BalanceFields on Balance {
+  id
+  primarySalesBalance
+  royaltyBalance
+  sellerBalance
+  event {
+    id
+    endTime
+  }
+  user {
+    id
+  }
+}

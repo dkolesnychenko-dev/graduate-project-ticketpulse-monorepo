@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     && npm install @graphprotocol/graph-ts@0.32.0 matchstick-as@0.6.0 assemblyscript@0.27.23 \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем protoc 3.20+ вручную (apt даёт слишком старый)
+# Install protoc 3.20+ manually (apt provides a version that is too old)
 RUN curl -fL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-linux-x86_64.zip \
     -o /tmp/protoc.zip \
     && unzip /tmp/protoc.zip -d /usr/local \

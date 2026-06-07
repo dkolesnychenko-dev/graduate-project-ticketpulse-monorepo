@@ -107,36 +107,124 @@ If you prefer using the **Remix Desktop IDE** for development, you can simply op
 
 ## 🚀 Production / Testnet Deployment
 
-When you are ready to deploy to a live network (e.g., Base Sepolia or Mainnet Base), the workflow changes slightly. You need real funds and you want to verify your contract source code on block explorers.
+When you are ready to deploy to a live network (Base Sepolia for staging,
+Base Mainnet for production), the workflow changes slightly: you need real
+funds to pay gas, and you'll want to verify your source code on the public
+block explorer so anyone can read it.
 
 ### Prerequisites
 
-1. Ensure your `.env` has a funded `PRIVATE_KEY`.
-2. Ensure you have the correct `RPC_URL_BASE_SEPOLIA` or `RPC_URL_BASE` set.
-3. Ensure you have a `BASESCAN_API_KEY` for source code verification.
+#### 1. A funded deployer wallet
 
-### Deployment Commands
+Generate (or pick) a fresh wallet you'll use only for deploys, then fund it:
 
-**Deploy to Base Sepolia (Testnet):**
+| Network | How to fund |
+| :--- | :--- |
+| **Base Sepolia** | Free testnet faucets:<br>• <https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet><br>• <https://www.alchemy.com/faucets/base-sepolia> |
+| **Base Mainnet** | Bridge real ETH via <https://bridge.base.org> or buy directly on a CEX with Base support |
+
+Paste the private key into `PRIVATE_KEY` in `packages/contracts/.env`.
+**Never commit a key that holds mainnet funds** — `.env` is already in
+`.gitignore`, just don't accidentally paste it anywhere else.
+
+#### 2. RPC URLs
+
+Pick **one** provider — any of them works for both Sepolia and Mainnet.
+Free tiers are more than enough for thesis-scale deployments.
+
+| Provider | Free tier | Sign-up |
+| :--- | :--- | :--- |
+| **Alchemy** | 300M CU / month | <https://dashboard.alchemy.com> |
+| **Infura** | 100k req / day | <https://app.infura.io> |
+| **QuickNode** | Limited free tier | <https://www.quicknode.com> |
+
+After creating a project, copy the HTTPS endpoint and paste it into:
+
+```dotenv
+RPC_URL_BASE_SEPOLIA=https://base-sepolia.g.alchemy.com/v2/<YOUR_KEY>
+RPC_URL_BASE=https://base-mainnet.g.alchemy.com/v2/<YOUR_KEY>
+```
+
+> [!TIP]
+> The same RPC URL is reused by `@ticketpulse/web`'s `SERVER_RPC_URL` and
+> by `@ticketpulse/subgraph` when targeting The Graph Studio. Stick to one
+> provider so your dashboards stay in a single place.
+
+#### 3. Basescan API key (for source verification)
+
+The deploy scripts auto-verify the source code on Basescan after each
+deployment — the verified contract becomes browsable and callable via
+the explorer UI.
+
+1. Go to <https://basescan.org/myapikey> and create a free account.
+2. Click **Add → Create New API Key**.
+3. The **same key** works for both networks:
+   - Base Mainnet → <https://basescan.org>
+   - Base Sepolia → <https://sepolia.basescan.org>
+4. Paste it into `BASESCAN_API_KEY` in `.env`.
+
+> [!NOTE]
+> Basescan is powered by Etherscan and uses the V2 Multi-chain API.
+> If you also work on Optimism, Arbitrum, etc., reuse the same key for
+> every Etherscan-family explorer.
+
+### Deployment commands
+
+**Deploy to Base Sepolia (staging / thesis demo):**
 
 ```bash
 pnpm run deploy:base-sepolia
 ```
 
-**Deploy to Base (Mainnet):**
+**Deploy to Base Mainnet (production):**
 
 ```bash
 pnpm run deploy:base
 ```
 
 These scripts will automatically:
-1. Compile the contracts.
+
+1. Compile the contracts (`forge build`).
 2. Broadcast the deployment transaction to the specified network.
 3. Wait for block confirmations.
-4. Verify the source code on Basescan using the API key from `.env`.
+4. **Verify the source code** on Basescan using `BASESCAN_API_KEY`.
 
-> [!TIP]
-> **Next Steps:** After successful deployment, copy the **Factory address** and proceed to [deploy the subgraph](../subgraph/README.md) to start indexing your events on the live network.
+The broadcast metadata (deployer, factory address, transaction hashes,
+gas used) is written to
+`packages/contracts/broadcast/Deploy.s.sol/<chainId>/run-latest.json`.
+
+### After deploying
+
+1. **Grab the factory address** from the script output (also in
+   `run-latest.json` under `transactions[].contractAddress` for the
+   factory entry — the second `CREATE` after the implementation clone).
+
+2. **Confirm verification** by opening the contract on the explorer:
+
+   | Network | Direct URL pattern |
+   | :--- | :--- |
+   | Base Sepolia | `https://sepolia.basescan.org/address/<factory_address>#code` |
+   | Base Mainnet | `https://basescan.org/address/<factory_address>#code` |
+
+   You should see the green "✔ Source code verified" badge, the Solidity
+   source, and an interactive "Read/Write Contract" tab.
+
+3. **Deploy the subgraph** — see [`../subgraph/README.md`](../subgraph/README.md).
+   The deploy script auto-syncs the factory address from
+   `broadcast/Deploy.s.sol/<chainId>/run-latest.json` so you don't have
+   to copy-paste it manually.
+
+4. **Wire the frontend** — paste the factory address into
+   `apps/web/.env.local` as `NEXT_PUBLIC_FACTORY_ADDRESS` and switch
+   `NEXT_PUBLIC_CHAIN_ID` to `84532` (Sepolia) or `8453` (Mainnet).
+   See [`../../apps/web/README.md`](../../apps/web/README.md#-production--staging-deployment).
+
+> [!WARNING]
+> Contracts are **immutable** once deployed. Run the local + Matchstick
+> test suites first (`pnpm test` here and in the subgraph package), then
+> deploy to Sepolia and exercise the full end-to-end flow before going
+> anywhere near mainnet. Mistakes on mainnet cost real money and can
+> only be fixed with a brand-new deployment.
 
 ---
 

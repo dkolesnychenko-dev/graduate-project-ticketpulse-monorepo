@@ -1,0 +1,35 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-unused-expressions": [
+      "warn",
+      { "allowShortCircuit": true, "allowTernary": true, "allowTaggedTemplates": false }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+    ],
+    "react/jsx-curly-brace-presence": ["warn", "never"],
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          ["parent", "sibling", "index"],
+          "internal"
+        ],
+        "pathGroups": [
+          { "pattern": "@ticketpulse/**", "group": "external", "position": "after" },
+          { "pattern": "@/**", "group": "internal", "position": "before" }
+        ],
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true }
+      }
+    ]
+  }
+}
